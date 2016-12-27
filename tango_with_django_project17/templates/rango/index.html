@@ -10,6 +10,11 @@
         <h1> Rango Says ...</h1>
         hello World! <strong>{{boldmessage}}</strong><br />
 
+        {% if yourName %}
+        <strong>You gave me your name as {{yourName}}</strong><br />
+        {% endif %}
+
+
         {% if categories %}
             <ul>
                 {% for category in categories %}
@@ -22,6 +27,16 @@
 
         <a href="/rango/about/"> About </a><br />
         <a href="/rango/add_category/">Add a New Category</a><br />
-        <img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" />
+
+        <a href="/rango/your_name/">Add a Your Name</a><br />
+        <a href="/rango/contact_us/">Contact Us</a><br />
+        <!--img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" /-->
+
+    <!--form action="" method="post">
+        <label for="your_name">Your Name: </label>
+        <input id="your_name" type="text" name="your_name" value="{{ current_name }}">
+        <input type="submit" value="OK">
+    </form-->
+
     </body>
 </html>
