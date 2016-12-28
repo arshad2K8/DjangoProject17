@@ -1,6 +1,7 @@
 __author__ = 'arshad'
 from django import forms
-from rango.models import Page, Category
+from django.contrib.auth.models import User
+from rango.models import Page, Category, UserProfile
 
 
 class CategoryForm(forms.ModelForm):
@@ -52,4 +53,15 @@ class ContactForm(forms.Form):
     cc_myself = forms.BooleanField(required=False)
 
 
+#one for the base user class
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
 
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password')
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('website', 'picture')

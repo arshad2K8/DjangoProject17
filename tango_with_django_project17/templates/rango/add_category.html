@@ -5,6 +5,7 @@
     <title>Rango</title>
 </head>
 <body>
+    {% if user.is_authenticated %}
     <h1> Add a Category </h1>
     <form id="category_form" method="POST" action="/rango/add_category/">
 
@@ -21,6 +22,11 @@
         <input type="submit" name="submit" value="Create Category"/>
 
     </form>
+
+    {% else %}
+    <h1> Only Registered Users can add/create categories sorry please register </h1>
+    <a href="/rango/register/">Register Here</a><br/>
+    {% endif %}
 
 </body>
 </html>

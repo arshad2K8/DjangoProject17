@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rango.models import Category,Page
-from rango.forms import CategoryForm, PageForm, NameForm, ContactForm
+from rango.forms import CategoryForm, PageForm, NameForm, ContactForm, UserForm, UserProfileForm
 from utils import send_email
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 # Create your views here.
 
 
@@ -33,7 +37,7 @@ def category(request, cat_name_slug):
 
     return render(request, 'rango/category.html',context_dict)
 
-
+@login_required
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -51,6 +55,7 @@ def add_category(request):
     return render(request, 'rango/add_category.html', {'form':form})
 #add page view
 
+@login_required
 def add_page(request, cat_name_slug):
     try:
         cat = Category.objects.get(slug=cat_name_slug)
@@ -103,7 +108,7 @@ def your_name(request):
 
 def contactFormView(request):
     if request.method == 'POST':
-        contactForm = ContactForm
+        contactForm = ContactForm(request.POST)
         if contactForm.is_valid():
             subject = contactForm.cleaned_data['subject']
             message = contactForm.cleaned_data['message']
@@ -115,8 +120,70 @@ def contactFormView(request):
             #send_email(recipients)
             return HttpResponse("Inside contact form")
     else:
-        form = ContactForm()
+        contactForm = ContactForm()
         context_dict = {}
-        context_dict['form'] = form
-        return render(request, 'rango/contactus_form.html', context_dict)
+        context_dict['form'] = contactForm
+    return render(request, 'rango/contactus_form.html', {'form': contactForm})
         #return HttpResponse("Inside contact form")
+
+def register(request):
+    registered = False
+    context_dict = {}
+    if request.method == 'POST':
+        userForm = UserForm(data=request.POST)
+        userProfileForm = UserProfileForm(data=request.POST)
+
+        if userForm.is_valid() and userProfileForm.is_valid():
+            user = userForm.save()
+            # Now we hash the password with the set_password method.
+            # Once hashed, we can update the user object.
+            user.set_password(user.password)
+            user.save()
+
+            #now sort out the profile form
+
+            profile = userProfileForm.save(commit=False)
+            profile.user = user
+            #save use profile model instance
+            profile.save()
+            registered = True
+        else:
+            print userForm.errors, userProfileForm.errors
+    else:
+        userForm = UserForm()
+        userProfileForm = UserProfileForm()
+        #context_dict = {'user_form':userForm, 'profile_form':UserProfileForm, 'registered':registered}
+    return render(request, 'rango/register.html', {'user_form':userForm, 'profile_form':UserProfileForm, 'registered':registered})
+
+
+def user_login(request):
+    # If the request is a HTTP POST, try to pull out the relevant information.
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # Use Django's machinery to attempt to see if the username/password
+        # combination is valid - a User object is returned if it is.
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect('/rango/')
+            else:
+                # Bad login details were provided. So we can't log the user in.
+                print "Invalid login details: {0}, {1}".format(username, password)
+                return HttpResponse("Invalid login details supplied.")
+
+    else:
+        # No context variables to pass to the template system, hence the
+        # blank dictionary object...
+        return render(request, 'rango/login.html', {})
+
+# Use the login_required() decorator to ensure only those logged in can access the view.
+@login_required
+def user_logout(request):
+    # Since we know the user is logged in, we can now just log them out.
+    logout(request)
+
+    # Take the user back to the homepage.
+    return HttpResponseRedirect('/rango/')

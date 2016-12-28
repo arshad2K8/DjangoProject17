@@ -7,9 +7,21 @@
     </head>
 
     <body>
-        <h1> Rango Says ...</h1>
+        {% if user.is_authenticated %}
+        <h1> Rango Says ...hello {{ user.username }}</h1>
+
+        <a href="/rango/logout/">Logout</a>
+        {% else %}
+
+        <h1> Rango Says ...hello</h1>
         hello World! <strong>{{boldmessage}}</strong><br />
 
+        <a href="/rango/register/">Register Here</a><br/>
+        <a href="/rango/login/">Login</a>
+
+        {% endif %}
+
+        <!-- This bit is to test your_name view -->
         {% if yourName %}
         <strong>You gave me your name as {{yourName}}</strong><br />
         {% endif %}
@@ -27,9 +39,9 @@
 
         <a href="/rango/about/"> About </a><br />
         <a href="/rango/add_category/">Add a New Category</a><br />
-
         <a href="/rango/your_name/">Add a Your Name</a><br />
         <a href="/rango/contact_us/">Contact Us</a><br />
+
         <!--img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" /-->
 
     <!--form action="" method="post">
