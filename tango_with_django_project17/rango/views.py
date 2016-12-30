@@ -7,19 +7,57 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from datetime import datetime
 # Create your views here.
 
 
 def index(request):
     #return HttpResponse("Rango Says Hello World")
-
-    category_list = Category.objects.order_by('-likes')[:5]
+    #request.session.set_test_cookie()
+    #category_list = Category.objects.order_by('-likes')[:5]
+    category_list = Category.objects.all()
+    page_list = Page.objects.order_by('-views')[:5]
     context_dict = {'boldmessage':"I am bold arshad from the context",
-                    'categories':category_list}
-    return render(request, 'rango/index.html', context_dict)
+                    'categories':category_list, 'pages':page_list}
+
+    # Get the number of visits to the site.
+    # We use the COOKIES.get() function to obtain the visits cookie.
+    # If the cookie exists, the value returned is casted to an integer.
+    # If the cookie doesn't exist, we default to zero and cast that.
+
+    visits = request.session.get('visits')
+    if not visits:
+        visits = 1
+    reset_last_visit = False
+    last_visit = request.session.get('last_visit')
+    #response = render(request, 'rango/index.html', context_dict)
+
+    # does the cookie last_visit exists
+    if last_visit:
+        #if it does get the cookies value
+        #cast it to python data time object
+        last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+        # if its more than a day since the last visit
+        if (datetime.now() - last_visit_time).seconds > 0:
+            visits += 1
+            reset_last_visit = True
+    else:
+        # last_visit cookie doesnt exist
+        reset_last_visit = True
+
+    if reset_last_visit:
+        request.session['last_visit'] = str(datetime.now())
+        request.session['visits'] = visits
+
+    context_dict['visits'] = visits
+    response = render(request, 'rango/index.html', context_dict)
+    #return render(request, 'rango/index.html', context_dict)
+    return response
+
 
 def about(request):
-    return HttpResponse("About rango mmm lemme think")
+    #return HttpResponse("About rango mmm lemme think")
+    return render(request, 'rango/about.html', {})
 
 
 
@@ -127,6 +165,7 @@ def contactFormView(request):
         #return HttpResponse("Inside contact form")
 
 def register(request):
+
     registered = False
     context_dict = {}
     if request.method == 'POST':

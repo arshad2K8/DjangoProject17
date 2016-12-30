@@ -1,30 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Rango</title>
-</head>
-<body>
-    <h1> Contact US </h1>
-    <!-- form id="category_form" method="POST" action="/rango/add_category/">
+{% extends 'base.html' %}
 
-        {% csrf_token %}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
+{% load staticfiles %}
 
-        {% for field in form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
-        {% endfor %}
-        <input type="submit" name="submit" value="Create Category"/>
+{% block title %}Contact Us{% endblock %}
 
-    </form-->
+{% block body_block %}
 
+     <h1> Contact US </h1>
 
-
-    <form action="/rango/contact_us/" method="POST">
+    <form action="{% url 'contact_us' %}" method="POST">
     {% csrf_token %}
         <table>
             {{ form.as_table }}
@@ -32,9 +16,5 @@
 
     <tr><input type="submit" value="Submit" /></tr>
 
-
     </form>
-
-
-</body>
-</html>
+{% endblock %}
