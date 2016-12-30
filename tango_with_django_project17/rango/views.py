@@ -56,8 +56,15 @@ def index(request):
 
 
 def about(request):
+    # If the visits session varible exists, take it and use it.
+# If it doesn't, we haven't visited the site so set the count to zero.
+    if request.session.get('visits'):
+        count = request.session.get('visits')
+    else:
+        count = 0
+
     #return HttpResponse("About rango mmm lemme think")
-    return render(request, 'rango/about.html', {})
+    return render(request, 'rango/about.html', {'count':count})
 
 
 
@@ -163,7 +170,8 @@ def contactFormView(request):
         context_dict['form'] = contactForm
     return render(request, 'rango/contactus_form.html', {'form': contactForm})
         #return HttpResponse("Inside contact form")
-
+'''
+# commenting out as we use django ap redux to manage login and logout
 def register(request):
 
     registered = False
@@ -178,9 +186,7 @@ def register(request):
             # Once hashed, we can update the user object.
             user.set_password(user.password)
             user.save()
-
             #now sort out the profile form
-
             profile = userProfileForm.save(commit=False)
             profile.user = user
             #save use profile model instance
@@ -217,8 +223,9 @@ def user_login(request):
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
         return render(request, 'rango/login.html', {})
-
+'''
 # Use the login_required() decorator to ensure only those logged in can access the view.
+'''
 @login_required
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
@@ -226,3 +233,5 @@ def user_logout(request):
 
     # Take the user back to the homepage.
     return HttpResponseRedirect('/rango/')
+
+'''

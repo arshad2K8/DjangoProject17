@@ -41,3 +41,20 @@ def index(request):
     #return render(request, 'rango/index.html', context_dict)
     return response
 
+    <div>
+        <ul>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                <li><a href="{% url 'add_category' %}">Add a New Category</a></li>
+            {% else %}
+                <li><a href="{% url 'registration_register' %}">Register Here</a></li>
+
+                <li><a href="{% url 'user_login' %}">Login</a></li>
+            {% endif %}
+
+                <!-- li><a href="/rango/about/"> About </a></li-->
+                <li><a href="{% url 'about' %}"> About </a></li>
+                <li><a href="{% url 'your_name' %}">Add a Your Name</a></li>
+                <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+        </ul>
+    </div>
