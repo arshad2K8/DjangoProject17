@@ -58,3 +58,4 @@ def index(request):
                 <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
         </ul>
     </div>
+<!--li><a href="{% url 'restricted' %}">Restricted Page</a></li-->
