@@ -170,7 +170,7 @@ def contactFormView(request):
         context_dict['form'] = contactForm
     return render(request, 'rango/contactus_form.html', {'form': contactForm})
         #return HttpResponse("Inside contact form")
-'''
+
 # commenting out as we use django ap redux to manage login and logout
 def register(request):
 
@@ -200,7 +200,7 @@ def register(request):
         #context_dict = {'user_form':userForm, 'profile_form':UserProfileForm, 'registered':registered}
     return render(request, 'rango/register.html', {'user_form':userForm, 'profile_form':UserProfileForm, 'registered':registered})
 
-
+'''
 def user_login(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':

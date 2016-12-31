@@ -1,0 +1,7 @@
+{% extends 'rango/base.html' %}
+
+{% block title %} Page not found. {% endblock %}
+
+{% block body_block %}
+    {% include 'rango/error.html' with error='Page not found (404)' %}
+{% endblock %}

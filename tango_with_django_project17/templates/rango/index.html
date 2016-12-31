@@ -5,37 +5,64 @@
 {% block title %}Index Page{% endblock %}
 
 {% block body_block %}
-        <!-- This bit is to test your_name view -->
+        <!--1.  This bit is to test your_name view -->
         {% if yourName %}
             <strong>You gave me your name as {{yourName}}</strong><br />
         {% endif %}
 
-           <!-- To show list of categories for all users-->
-        {% if categories %}
-        <h1> Categories </h1>
-            <ul>
-                {% for category in categories %}
-                <!--li><a href="/rango/category/{{ category.slug }}/"> {{ category.name }}</a> </li-->
-                <li><a href="{% url 'category'  category.slug %}"> {{ category.name }}</a> </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <strong>There are no categories present. </strong>
-        {% endif %}
+         <!-- 2. displays logged in users name -->
+        <div class="page-header">
+         {% if user.is_authenticated %}
 
-        <br />
-        <br />
-        {% if pages %}
-        <h1> Top 5 Pages </h1>
-            <ul>
-                {% for page in pages %}
-                <!--li><a href="/rango/category/{{ category.slug }}/"> {{ category.name }}</a> </li-->
-                <li><a href="{{ page.url }}"> {{ page.title }}</a> </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <strong>There are no pages present. </strong>
-        {% endif %}
+                <h1>Rango says... hello {{ user.username }}!</h1>
+         {% else %}
+                <h1>Rango says... hello world!</h1>
+          {% endif %}
+         </div>
+
+           <!-- 3. To show list of categories for all users-->
+        <div class="row placeholders">
+            <div class="col-xs-12 col-sm-6 placeholder">
+
+                {% if categories %}
+                <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"> Categories </h3>
+                </div>
+                </div>
+                    <ul class="list-group">
+                        {% for category in categories %}
+                        <!--li><a href="/rango/category/{{ category.slug }}/"> {{ category.name }}</a> </li-->
+                        <li class="list-group-item"><a href="{% url 'category'  category.slug %}"> {{ category.name }}</a> </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <strong>There are no categories present. </strong>
+                {% endif %}
+
+            </div>
+
+            <div class="col-xs-12 col-sm-6 placeholder">
+                {% if pages %}
+
+                    <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Top 5 Pages</h3>
+                    </div>
+                    </div>
+
+                    <ul class="list-group">
+                        {% for page in pages %}
+                        <!--li><a href="/rango/category/{{ category.slug }}/"> {{ category.name }}</a> </li-->
+                        <li class="list-group-item"><a href="{{ page.url }}"> {{ page.title }}</a> </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <strong>There are no pages present. </strong>
+                {% endif %}
+
+            </div>
+        </div>
 
         <strong> BTW, number of times you visited rango was {{ visits }}</strong>
         <!--img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" /-->
