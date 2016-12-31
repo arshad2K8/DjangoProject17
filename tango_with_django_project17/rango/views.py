@@ -200,7 +200,7 @@ def register(request):
         #context_dict = {'user_form':userForm, 'profile_form':UserProfileForm, 'registered':registered}
     return render(request, 'rango/register.html', {'user_form':userForm, 'profile_form':UserProfileForm, 'registered':registered})
 
-'''
+
 def user_login(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
@@ -223,9 +223,9 @@ def user_login(request):
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
         return render(request, 'rango/login.html', {})
-'''
+
 # Use the login_required() decorator to ensure only those logged in can access the view.
-'''
+
 @login_required
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
@@ -233,5 +233,3 @@ def user_logout(request):
 
     # Take the user back to the homepage.
     return HttpResponseRedirect('/rango/')
-
-'''
