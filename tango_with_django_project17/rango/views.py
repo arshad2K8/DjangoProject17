@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rango.models import Category,Page
 from rango.forms import CategoryForm, PageForm, NameForm, ContactForm, UserForm, UserProfileForm
-from utils import send_email
+from utils import send_email, run_query
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -233,3 +233,17 @@ def user_logout(request):
 
     # Take the user back to the homepage.
     return HttpResponseRedirect('/rango/')
+
+
+def search(request):
+
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+
+    return render(request, 'rango/search.html', {'result_list': result_list})

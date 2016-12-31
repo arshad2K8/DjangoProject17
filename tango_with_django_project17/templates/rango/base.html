@@ -43,7 +43,8 @@
                         <li><a href="{% url 'registration_register' %}">Register Here</a></li>
                         <li><a href="{% url 'auth_login' %}">Login</a></li>
                     {% endif %}
-                                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'search' %}">Search</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
 
               </ul>
         </div>
@@ -55,7 +56,7 @@
           {% load rango-extras %}
         <div class="col-sm-3 col-md-2 sidebar">
                 {% block side_block %}
-                    {% get_category_list %}
+                    {% get_category_list category %}
                 {% endblock %}
 
         </div>
