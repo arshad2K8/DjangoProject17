@@ -69,17 +69,27 @@ def about(request):
 
 
 def category(request, cat_name_slug):
+
+    context_dict = {}
+    context_dict['result_list'] = None
+    context_dict['query'] = None
+    if request.method == 'POST':
+        query = request.POST.get('query')
+        if query:
+            context_dict['query'] = query.strip()
+            result_list = run_query(query)
+            context_dict['result_list'] = result_list
     try:
-        context_dict = {}
         category = Category.objects.get(slug=cat_name_slug)
         context_dict['category'] = category
         context_dict['category_name'] = category.name
         context_dict['slug_category_name'] = cat_name_slug
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
         context_dict['pages'] = pages
     except Category.DoesNotExist:
         pass
-
+    if not context_dict['query']:
+        context_dict['query'] = category.name
     return render(request, 'rango/category.html',context_dict)
 
 @login_required
@@ -247,3 +257,32 @@ def search(request):
             result_list = run_query(query)
 
     return render(request, 'rango/search.html', {'result_list': result_list})
+
+def track_url(request):
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET.get('page_id')
+            if page_id:
+                page = Page.objects.get(id=int(page_id.strip()))
+                if page:
+                    page.views += 1
+                    page.save()
+                    return HttpResponseRedirect(page.url)
+    return HttpResponseRedirect('/rango/')
+
+
+@login_required
+def like_category(request):
+    cat_id = None
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+
+    likes = 0
+    if cat_id:
+        cat = Category.objects.get(id=int(cat_id))
+        if cat:
+            likes = cat.likes + 1
+            cat.likes =  likes
+            cat.save()
+
+    return HttpResponse(likes)

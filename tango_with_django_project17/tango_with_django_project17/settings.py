@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 TEMPLATE_PATH = os.path.join(BASE_DIR,'templates')
 TEMPLATE_DIRS = (TEMPLATE_PATH,)
 
-STATIC_PATH = os.path.join(BASE_DIR,'static')
+STATIC_PATH = os.path.join(BASE_DIR,'static/')
 STATIC_URL = 'static/'
 STATICFILES_DIRS = (
     STATIC_PATH,
