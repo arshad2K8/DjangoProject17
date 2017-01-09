@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from rango.models import Category,Page
 from rango.forms import CategoryForm, PageForm, NameForm, ContactForm, UserForm, UserProfileForm
 from utils import send_email, run_query
+from google_search import getSearchUrls
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -77,7 +78,7 @@ def category(request, cat_name_slug):
         query = request.POST.get('query')
         if query:
             context_dict['query'] = query.strip()
-            result_list = run_query(query)
+            result_list = getSearchUrls(query)
             context_dict['result_list'] = result_list
     try:
         category = Category.objects.get(slug=cat_name_slug)
@@ -120,6 +121,7 @@ def add_page(request, cat_name_slug):
     if request.method == 'POST':
         pageForm = PageForm(request.POST)
         if pageForm.is_valid():
+            print 'page form is valid'
             if cat:
                 page = pageForm.save(commit=False)
                 page.category = cat
@@ -128,8 +130,17 @@ def add_page(request, cat_name_slug):
 
                 #use a redirct here
                 return category(request, cat_name_slug)
+        elif request.POST.get('url') and request.POST.get('title'):
+            if cat:
+                title = request.POST.get('title').strip()
+                url = request.POST.get('url').strip()
+                newPage = Page.objects.get_or_create(category=cat, title=title)[0]
+                newPage.url = url
+                newPage.views = 0
+                newPage.save()
+                return category(request, cat_name_slug)
         else:
-            print pageForm.errors
+            print 'Errro in page form', pageForm.errors
     else:
         pageForm = PageForm()
     context_dict = {'form':pageForm, 'category':cat}
@@ -246,7 +257,7 @@ def user_logout(request):
 
 
 def search(request):
-
+    print 'inside search'
     result_list = []
 
     if request.method == 'POST':
@@ -254,7 +265,7 @@ def search(request):
 
         if query:
             # Run our Bing function to get the results list!
-            result_list = run_query(query)
+            result_list = getSearchUrls(query)
 
     return render(request, 'rango/search.html', {'result_list': result_list})
 

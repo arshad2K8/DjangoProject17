@@ -1,0 +1,3 @@
+__author__ = 'arshad'
+GOOGLE_API_KEY = 'AIzaSyA8IMsMe4EFl3mx5mAdHrhnWCQ_QWQ--8A'
+CX = '016585465265343173652:e1cwh2kay9i'

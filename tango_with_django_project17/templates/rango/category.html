@@ -54,10 +54,18 @@
                         <div class="panel-body">
                             <div class="list-group">
                                 {% for result in result_list %}
+
                                     <div class="list-group-item">
-                                        <h4 class="list-group-item-heading"><a href="{{ result.link }}"> {{ result.title }} </a> </h4>
+                                        <h4 class="list-group-item-heading"><a href="{{ result.url }}"> {{ result.title }} </a> </h4>
                                         <p class="list-group-item-text">{{ result.summary }}</p>
+                                        <form class="form-inline" id="addpage{{result.title}}" method="post" action="{% url 'add_page'  category.slug %}">
+                                            {% csrf_token %}
+                                            <input id="id_title" type = "hidden" maxlength="128" name="title" type="text" value="{{ result.title }}">
+                                            <input id="id_url" type = "hidden" maxlength="200" name="url" type="url" value="{{ result.url }}">
+                                            <input class="btn btn-primary" type="submit" name="submit" value="AddThisPage" />
+                                        </form>
                                     </div>
+
                                 {% endfor %}
                             </div>
                         </div>
@@ -76,5 +84,6 @@
         {% else %}
             The specified category {{ slug_category_name }} does not exist!
         {% endif %}
+
 
 {% endblock %}
