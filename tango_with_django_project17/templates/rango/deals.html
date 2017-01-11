@@ -1,0 +1,46 @@
+{% extends 'rango/base.html' %}
+
+{% load staticfiles %}
+
+
+{% block body_block %}
+
+             <!-- Genric search for category -->
+             <form class="form-inline" id="user_form" method="post" action="{% url 'deals' %}">
+                {% csrf_token %}
+                Sex(male , female):
+                <input class="form-control" type="text" size="50" name="sex"  value = "male" id="sex" />
+                Discount:
+                <input class="form-control" type="text" size="50" name="disc" id="disc" />
+
+                <input class="btn btn-primary" type="submit" name="submit" value="GetDeals" />
+                <br />
+            </form>
+
+
+     {% if deals %}
+        <div class="container">
+        <table class="table table-striped">
+
+            <tr>
+                <th> Item Name </th>
+                <th> Old Price </th>
+                <th> New Price </th>
+                <th> Discount </th>
+            </tr>
+          {% for deal in deals %}
+           <tr>
+                <td> {{ deal.title }} </td>
+                <td> {{ deal.wasprice }} </td>
+                <td> {{ deal.nowprice }} </td>
+               <td> {{ deal.discount }} </td>
+            </tr>
+           {% endfor %}
+
+        </table>
+        </div>
+     {% else %}
+                <strong> No deals currently in display.</strong>
+     {% endif %}
+
+{% endblock %}

@@ -57,3 +57,9 @@ def run_query(search_terms):
             'summary': 'sample description'})
     # Return the list of results to the calling function.
     return results
+
+
+def get_deals_from_hof():
+    ValidDeals = []
+    ValidDeals.append({'title':'Book1', 'oldprice':20, 'newprice':30})
+    return ValidDeals

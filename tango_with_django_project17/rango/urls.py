@@ -16,6 +16,7 @@ urlpatterns = patterns('',
                        url(r'^your_name/$', views.your_name, name='your_name'),
                        url(r'^contact_us/$', views.contactFormView, name='contact_us'),
                        url(r'^search/$', views.search, name='search'),
+                       url(r'^deals/$', views.getDeals, name='deals'),
                        url(r'^like_category/$', views.like_category, name='like_category'),
                        #url(r'^sample_form/$', views.sample_form, name='sample_form'),
 

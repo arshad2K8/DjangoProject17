@@ -4,14 +4,17 @@ from rango.models import Category,Page
 from rango.forms import CategoryForm, PageForm, NameForm, ContactForm, UserForm, UserProfileForm
 from utils import send_email, run_query
 from google_search import getSearchUrls
+from DealScraper import get_deals_from_hof
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from datetime import datetime
+import time
+## dd/mm/yyyy f
 # Create your views here.
 
-
+CACHE = {}
 def index(request):
     #return HttpResponse("Rango Says Hello World")
     #request.session.set_test_cookie()
@@ -297,3 +300,26 @@ def like_category(request):
             cat.save()
 
     return HttpResponse(likes)
+
+def getCacheKey(sex, disc):
+    cachekey = sex.strip()+'-'+disc.strip()+'-'+time.strftime("%d/%m/%Y")
+    return cachekey
+
+def getDeals(request):
+    context_dict = {}
+    if request.method == 'POST':
+        sex = request.POST.get('sex')
+        disc = request.POST.get('disc')
+        if sex and disc:
+            cachekey = getCacheKey(sex, disc)
+            if cachekey in CACHE:
+                print 'found in cache', cachekey
+                ValidDeals = CACHE[cachekey]
+            else:
+                print 'key not found in cache', cachekey
+                ValidDeals = get_deals_from_hof(sex.strip(), int(disc.strip()))
+                CACHE[cachekey] = ValidDeals
+            context_dict['deals'] = ValidDeals
+
+    #ValidDeals = get_deals_from_hof('male', 70)
+    return render(request, 'rango/deals.html', context_dict)
